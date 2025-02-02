@@ -1,0 +1,17 @@
+div.mainContainer {
+    margin: 10px;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    column-gap: 10px;
+}
+
+
+div.rankedStatsColumn {
+    background-color: red;
+    min-height: 10px;
+}
+
+div.matchHistory {
+    background-color: blue;
+    min-height: 10px;
+}
