@@ -59,8 +59,7 @@ function ElectronApp() {
       dismissable={connected}
       type={connected ? "primary" : "danger"} />
     }
-    {gameState}
-    {connected && <Home clientState={gameState} />}
+    <Home />
     </>
   );
 }

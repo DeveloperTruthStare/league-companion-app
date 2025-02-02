@@ -5,13 +5,22 @@ div.mainContainer {
     column-gap: 10px;
 }
 
+div.header {
+    background-color: #31313c;
+    padding: 10px 50px 100px 50px;
+    text-align: center;
+}
+
+div.header > h1 > span {
+    color: grey;
+}
 
 div.rankedStatsColumn {
-    background-color: red;
+    background-color: #31313c;
     min-height: 10px;
 }
 
 div.matchHistory {
-    background-color: blue;
+    background-color: #31313c;
     min-height: 10px;
 }

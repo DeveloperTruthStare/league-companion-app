@@ -1,0 +1,21 @@
+div.championNames {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin: 10px;
+}
+
+div.matchSummary {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+    margin: 5px;
+    border-radius: 10px;
+    padding: 5px;
+}
+
+.win {
+    background-color: #28344e;
+}
+
+.lose {
+    background-color: #89343b;
+}
