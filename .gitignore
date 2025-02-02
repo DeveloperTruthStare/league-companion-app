@@ -133,3 +133,4 @@ dist
 # build directories
 league-companion-app_backend_electron/build
 league-companion-app_frontend_react/dist
+build
