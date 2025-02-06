@@ -2,6 +2,10 @@
 
 This project's purpose is for me to learn Typescript, React, electron and other front end tools/frameworks. I plan to add features that I believe other programs/sites would benefit from, however due to the requirement of an external server to access riot api's there is no planned release of this.
 
+## Current Status as of 2025/02/06
+
+![Status as of February 6th 2025](/assets/status_02_05_2025.png)
+
 ## What is each project here
 
 ### [league-companion-app_backend_electron](/league-companion-app_backend_electron/)
@@ -65,7 +69,7 @@ Next to the icons of the champion, I have decided for the time being to display 
 
 One thing WTL does well that is not mentioned here is how it handles multiple accounts. Because the user is identified by their discord account, it can link multiple accounts to that discord account, just be detecting them on the computer when they are logged in allowing for no other action required by the user.
 
-# Work in progress
+# Work(s) in progress
 
 ## VOD Recording
 
@@ -79,13 +83,13 @@ The main part of this program is that it should automatically record games of le
 - [ ] Get game ID for file name
 - [ ] Get timestamps for kills/deaths/assists
 
-### ❌❌ Blockers ❌❌
+### ❌ Blockers ❌
 
 Currently I can detect if a league game is "InProgress" This is the state of the game after champ select has concluded and includes load screen time. Ideally I'd like to detect when the game loads in.
 
 # TODO (eventually)
 
-## Move static resources from go server to electron backend
+### Move static resources from go server to electron backend
 
 Currently the static icon assets are being served from the go "proxy" server to the front end, but this adds unneccesary network calls, when these can be loaded locally from the electron window.
 
