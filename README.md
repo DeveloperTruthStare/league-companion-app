@@ -8,11 +8,11 @@ I recently began using [We will teach you League](https://weteachleague.com/)'s 
 
 ### Planned Features
 
-[ ] Auto recording league of legends games
-[ ] Easy way to look through VODs to find games
-[ ] Note taking features
-[ ] Mark which champions a given note is relavent for
-[ ] Bring previously taken notes to the forefront when the relavent champions are in the current game
+- [ ] Auto recording league of legends games
+- [ ] Easy way to look through VODs to find games
+- [ ] Note taking features
+- [ ] Mark which champions a given note is relavent for
+- [ ] Bring previously taken notes to the forefront when the relavent champions are in the current game
 
 ## References
 
