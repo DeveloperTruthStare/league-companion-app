@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -104,9 +105,29 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(body)
 }
 
+const CHAMPIONS = "champion"
+const ITEMS = "item"
+const STYLES = "styles"
+const SPELL = "spell"
+
 func staticHandler(w http.ResponseWriter, r *http.Request) {
-	x := r.URL.Path[len("/static/"):]
-	fmt.Printf("Retrieving asset for %s\n", x)
+	pathPortion := r.URL.Path[len("/static/"):]
+	parts := strings.Split(pathPortion, "/")
+
+	switch parts[0] {
+	case CHAMPIONS:
+		championName := strings.ToUpper(parts[1][:1]) + parts[1][1:]
+		fmt.Println(championName)
+		http.ServeFile(w, r, fmt.Sprintf("./assets/champion/%s.png", championName))
+	case ITEMS:
+		http.ServeFile(w, r, fmt.Sprintf("./assets/item/%s.png", parts[1]))
+	case STYLES:
+		http.ServeFile(w, r, fmt.Sprintf("./assets/perk-images/Styles/%s.png", parts[1]))
+	case SPELL:
+		http.ServeFile(w, r, fmt.Sprintf("./assets/spell/%s.png", parts[1]))
+	default:
+		http.Error(w, "could not find thingy", http.StatusNotFound)
+	}
 }
 
 func main() {

@@ -41,6 +41,16 @@ My plan is to implement a system more similar to u.gg, op.gg, or the league clie
 
 Where sites like op.gg and u.gg have a button to open a drop down menu showing more stats, I plan to have a vido player displaying the vod of the game.
 
+## Other notes
+
+### Champion Names vs Player Names
+
+Next to the icons of the champion, I have decided for the time being to display the champion name, rather than the player name. I don't believe knowing the player name is helpful to the player in a learning journey, but a champion name can be a good way to search through games using ctrl+f.
+
+### Users with multiple accounts
+
+One thing WTL does well that is not mentioned here is how it handles multiple accounts. Because the user is identified by their discord account, it can link multiple accounts to that discord account, just be detecting them on the computer when they are logged in allowing for no other action required by the user.
+
 # References
 
 ## 1. WTL Auto Recorder
