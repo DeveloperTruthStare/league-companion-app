@@ -1,3 +1,42 @@
+/*
+* Images
+*/
+
+/* Champion Images */
+div.ChampIcons > img {
+    background-color: green;
+    width: 50px;
+    height: 50px;
+}
+
+/* Summoner Spell Icons */
+
+/* Rune Page Icons */
+div.ChampIcons > div.perks > img {
+    background-color: blue;
+    width: 25px;
+    height: 25px;
+}
+
+/* Item icons */
+div.matchSummary > div.items > img {
+    background-color: green;
+    width: 25px;
+    height: 25px;
+}
+
+/* Small champion icons */
+
+
+div.ChampIcons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: auto;
+    margin: auto;
+}
+
+
+
 div.championNames {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -6,7 +45,7 @@ div.championNames {
 
 div.matchSummary {
     display: grid;
-    grid-template-columns: 2fr 2fr 3fr 3fr 6fr;
+    grid-template-columns: 2fr 2fr 3fr 3fr 6fr 1fr;
     margin: 5px;
     border-radius: 10px;
     padding: 5px;
@@ -22,12 +61,6 @@ div.matchSummary > div.items {
     margin: auto;
 }
 
-div.ChampIcons {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: auto;
-    margin: auto;
-}
 
 div.ChampIcons > div.perks {
     display: grid;
@@ -38,18 +71,7 @@ div.ChampIcons > div.perks {
     margin: auto;
 }
 
-div.ChampIcons > img {
-    background-color: green;
-    width: 50px;
-    height: 50px;
-}
-
-div.ChampIcons > div.perks > img {
-    background-color: blue;
-    width: 25px;
-    height: 25px;
-}
-
+/* KDA */
 div.KDA {
     align-items: center;
     text-align: center;
@@ -57,12 +79,7 @@ div.KDA {
     
 }
 
-div.matchSummary > div.items > img {
-    background-color: green;
-    width: 25px;
-    height: 25px;
-}
-
+/* Background color */
 .win {
     background-color: #28344e;
 }
@@ -71,7 +88,7 @@ div.matchSummary > div.items > img {
     background-color: #89343b;
 }
 
-
+/* Player/Champion Name */
 div.riotIdGameName {
     color: lightgrey;
 }
@@ -80,8 +97,38 @@ div.riotIdGameName > strong {
     color: white;
 }
 
+/* Queue Type, Win/Loss, Game Duration */
 div.InfoBox1 {
     text-align: center;
     align-items: center;
     margin: auto;
+}
+
+/* Vod Button */
+div.vodButton {
+    margin-top: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+i.arrow {
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    display: inline-block;
+    padding: 3px;
+}
+
+i.down {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+}
+
+div.vodButton > button {
+    background-color: transparent;
+    border: transparent;
+}
+
+div.vodDisplay {
+    margin: 0px 50px 0px 50px;
 }

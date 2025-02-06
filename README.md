@@ -2,6 +2,20 @@
 
 This project's purpose is for me to learn Typescript, React, electron and other front end tools/frameworks. I plan to add features that I believe other programs/sites would benefit from, however due to the requirement of an external server to access riot api's there is no planned release of this.
 
+## What is each project here
+
+### [league-companion-app_backend_electron](/league-companion-app_backend_electron/)
+
+This is the electron code which manages the window and the state of data using typescript. This creates the window displays a webpage (the react frontend compiled into static html/js/css) and makes calls to the client running on the same computer using the league client api.
+
+### [league-companion-app_frontend_react](/league-companion-app_frontend_react/)
+
+This is the main UI code, built using react and typescript. This is compiled into static html/css/javascript code and then used by electron.
+
+### [league-companion-app_server_go](/league-companion-app_server_go/)
+
+This is basically a proxy server which holds the RIOT_API_KEY. This limits the calls to ensure riot guidelines are being followed, as well as caches games and data to reduce total calls to riot server.
+
 ## Inspiration
 
 I recently began using [We will teach you League](https://weteachleague.com/)'s auto recording program, and have found a few ways in which I believe it could be inproved.
@@ -50,6 +64,30 @@ Next to the icons of the champion, I have decided for the time being to display 
 ### Users with multiple accounts
 
 One thing WTL does well that is not mentioned here is how it handles multiple accounts. Because the user is identified by their discord account, it can link multiple accounts to that discord account, just be detecting them on the computer when they are logged in allowing for no other action required by the user.
+
+# Work in progress
+
+## VOD Recording
+
+The main part of this program is that it should automatically record games of league from the player's perspective. To do this we need to detect when a game has started, and begin a window capture of the game.
+
+### Subtasks
+
+- [x] ❌ Detect when game has been started
+- [x] ✅ Detect League Game window
+- [ ] Save capture to a file
+- [ ] Get game ID for file name
+- [ ] Get timestamps for kills/deaths/assists
+
+### ❌❌ Blockers ❌❌
+
+Currently I can detect if a league game is "InProgress" This is the state of the game after champ select has concluded and includes load screen time. Ideally I'd like to detect when the game loads in.
+
+# TODO (eventually)
+
+## Move static resources from go server to electron backend
+
+Currently the static icon assets are being served from the go "proxy" server to the front end, but this adds unneccesary network calls, when these can be loaded locally from the electron window.
 
 # References
 
