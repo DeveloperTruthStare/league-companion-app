@@ -104,6 +104,11 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(body)
 }
 
+func staticHandler(w http.ResponseWriter, r *http.Request) {
+	x := r.URL.Path[len("/static/"):]
+	fmt.Printf("Retrieving asset for %s\n", x)
+}
+
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -115,6 +120,7 @@ func main() {
 		log.Fatal("API key not found in .env file")
 	}
 
+	http.HandleFunc("/static/", staticHandler)
 	http.HandleFunc("/riot/", proxyHandler)
 
 	port := 8080

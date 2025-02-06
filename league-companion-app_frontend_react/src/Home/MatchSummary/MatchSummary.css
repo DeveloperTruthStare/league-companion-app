@@ -1,15 +1,66 @@
 div.championNames {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    margin: 10px;
+    font-size: 12px;
 }
 
 div.matchSummary {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 2fr;
+    grid-template-columns: 2fr 2fr 3fr 3fr 6fr;
     margin: 5px;
     border-radius: 10px;
     padding: 5px;
+}
+
+div.matchSummary > div.items {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    width: 100px;
+    height: 50px;
+    padding: auto;
+    align-items: center;
+    margin: auto;
+}
+
+div.ChampIcons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: auto;
+    margin: auto;
+}
+
+div.ChampIcons > div.perks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 1px;
+    row-gap: 1px;
+    padding: auto;
+    margin: auto;
+}
+
+div.ChampIcons > img {
+    background-color: green;
+    width: 50px;
+    height: 50px;
+}
+
+div.ChampIcons > div.perks > img {
+    background-color: blue;
+    width: 25px;
+    height: 25px;
+}
+
+div.KDA {
+    align-items: center;
+    text-align: center;
+    margin: auto;
+    
+}
+
+div.matchSummary > div.items > img {
+    background-color: green;
+    width: 25px;
+    height: 25px;
 }
 
 .win {
@@ -18,4 +69,19 @@ div.matchSummary {
 
 .lose {
     background-color: #89343b;
+}
+
+
+div.riotIdGameName {
+    color: lightgrey;
+}
+
+div.riotIdGameName > strong {
+    color: white;
+}
+
+div.InfoBox1 {
+    text-align: center;
+    align-items: center;
+    margin: auto;
 }

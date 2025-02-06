@@ -129,6 +129,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 
+.tgz
 
 # build directories
 ./league-companion-app_backend_electron/build/

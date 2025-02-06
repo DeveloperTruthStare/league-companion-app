@@ -28,7 +28,10 @@ type Participant = {
     championName: string;
     deaths: number;
     kills: number;
+    riotIdGameName: string;
     puuid: string;
+    summoner1Id: number;
+    summoner2Id: number;
     teamId: number;
     totalMinionsKilled: number;
     visionScore: number;
@@ -52,6 +55,14 @@ type GameData = {
     primaryRunePage: string;
     secondaryRunePage: string;
 }
+
+const SummonerSpellReference = {
+    '14': 'Ignite',
+    '4': 'Flash',
+    '11': 'Smite',
+    '21': 'Barrier',
+    '12': 'Teleport'
+};
 
 const MatchSummary = ({ matchId, userPuuid }: Props) => {
     const [matchData, setMatchData] = useState<Match | null>(null);
@@ -88,6 +99,10 @@ const MatchSummary = ({ matchId, userPuuid }: Props) => {
                     gameData.win = player.win;
                     gameData.champion = player.championName;
                     gameData.csmin = Math.round(gameData.cs * 600 / tempMatchData.info.gameDuration) / 10;
+                    //gameData.summonerSpell1 = SummonerSpellReference[player.summoner1Id.toString()];
+                    //gameData.summonerSpell2 = SummonerSpellReference[player.summoner2Id.toString()];
+                    gameData.primaryRunePage = '';
+                    gameData.secondaryRunePage = '';
                 }
             });
 
@@ -101,32 +116,55 @@ const MatchSummary = ({ matchId, userPuuid }: Props) => {
     {!matchData ? "Loading" : 
     <div className={"matchSummary " + (matchData.self.win ? "win" : "lose")}>
         <div className="InfoBox1">
-            {matchData.self.queueType}
+            <div>
+                {matchData.self.queueType}
+            </div>
+            <div>
+                {matchData.self.win ? "WIN" : "LOSS"} {Math.round(matchData.info.gameDuration / 60)}:{matchData.info.gameDuration % 60}
+            </div>
         </div>
         <div className="ChampIcons">
-            {matchData.self.champion}
-            {matchData.self.summonerSpell1}
-            {matchData.self.summonerSpell2}
-            {matchData.self.primaryRunePage}
-            {matchData.self.secondaryRunePage}
+            <img src="" className="playerChampion" />
+            <div className="perks">
+                <img src="" className="playerSummonerSpell1" />
+                <img src="" className="playerSummonerSpell2" />
+                <img src="" className="playerRunePrimary" />
+                <img src="" className="playerRuneSecondary" />
+            </div>
         </div>
         <div className="KDA">
-            <p>{matchData.self.kills}/{matchData.self.deaths}/{matchData.self.assists}</p>
-            <p>{matchData.self.cs}CS ({matchData.self.csmin})</p>
-            <p>{matchData.self.vision} vision</p>
+            <div>{matchData.self.kills}/{matchData.self.deaths}/{matchData.self.assists}</div>
+            <div>{matchData.self.cs}CS ({matchData.self.csmin})</div>
+            <div>{matchData.self.vision} vision</div>
         </div>
         <div className="items">
-
+            <img src="" />
+            <img src="" />
+            <img src="" />
+            <img src="" />
+            <img src="" />
+            <img src="" />
+            <img src="" />
         </div>
         <div className="championNames">
             <div className="blueSide">
                 {matchData.info.participants.slice(0, 5).map((player, index) => (
-                    <div>{player.championName}</div>
+                    <>
+                        <div className="riotIdGameName" ><img src="" width="10" height="10"/>
+                            {player.puuid === userPuuid && <strong>{player.riotIdGameName}</strong>}
+                            {player.puuid !== userPuuid && player.riotIdGameName}
+                        </div>
+                    </>
                 ))}
             </div>
             <div className="redSide">
                 {matchData.info.participants.slice(5, 10).map((player, index) => (
-                    <div>{player.championName}</div>
+                    <>
+                        <div className="riotIdGameName" ><img src="" width="10" height="10"/>
+                            {player.puuid === userPuuid && <strong>{player.riotIdGameName}</strong>}
+                            {player.puuid !== userPuuid && player.riotIdGameName}
+                        </div>
+                    </>
                 ))}
             </div>
         </div>

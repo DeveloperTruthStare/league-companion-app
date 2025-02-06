@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Alert from './components/Alert/Alert';
-import { ConnectionStatus, twitchLink, strings, discordLink } from './constants';
 import Home from './Home/Home';
 
 function ElectronApp() {
@@ -13,16 +12,6 @@ function ElectronApp() {
       setConnected(true);
       if (newState != gameState[gameState.length-1]) {
         setGameState(newState as string);
-        if (newState == ConnectionStatus.STATE_CHAMP_SELECT) {
-          // Copy pre game msg to clipboard
-          const randomString = strings[Math.floor(Math.random() * strings.length)];
-          const fullMessage = randomString + "\n" + twitchLink + "\n" + discordLink + "\nvc if yall want";
-          navigator.clipboard.writeText(fullMessage).catch((err) => console.error("Failed to copy text:", err));
-        } else {
-          // Copy post game msg to clipboard
-          const postGameMessage = "Don't have to use it on me, but don't forget to use your prime sub.\n" + twitchLink;
-          navigator.clipboard.writeText(postGameMessage).catch((err) => console.error("Failed to copy post game message:", err));
-        }
       }
     }
 
@@ -31,7 +20,7 @@ function ElectronApp() {
     return () => {
       window.electronAPI.removeListener('lol-gameflow', handleGameflowChange);
     };
-  }, [gameState]);
+  }, [gameState, connected]);
 
   useEffect(() => {
     const handleGeneralUpdate = (status: unknown) => {
