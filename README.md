@@ -2,7 +2,7 @@
 
 This project's purpose is for me to learn Typescript, React, electron and other front end tools/frameworks. I plan to add features that I believe other programs/sites would benefit from, however due to the requirement of an external server to access riot api's there is no planned release of this.
 
-## Current Status as of 2025/02/06
+## Current Status as of 2025/02/08
 
 ![Status as of February 6th 2025](/assets/status_02_08_2025.png)
 
