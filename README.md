@@ -4,7 +4,7 @@ This project's purpose is for me to learn Typescript, React, electron and other 
 
 ## Current Status as of 2025/02/06
 
-![Status as of February 6th 2025](/assets/status_02_05_2025.png)
+![Status as of February 6th 2025](/assets/status_02_08_2025.png)
 
 ## What is each project here
 
@@ -77,8 +77,10 @@ The main part of this program is that it should automatically record games of le
 
 ### Subtasks
 
-- [x] ❌ Detect when game has been started
 - [x] ✅ Detect League Game window
+- [x] ✅ Connect to League Client and get current Summoner
+- [x] ✅ Get and display Match History
+- [x] ❌ Detect when game has been started
 - [ ] Save capture to a file
 - [ ] Get game ID for file name
 - [ ] Get timestamps for kills/deaths/assists
@@ -86,12 +88,6 @@ The main part of this program is that it should automatically record games of le
 ### ❌ Blockers ❌
 
 Currently I can detect if a league game is "InProgress" This is the state of the game after champ select has concluded and includes load screen time. Ideally I'd like to detect when the game loads in.
-
-# TODO (eventually)
-
-### Move static resources from go server to electron backend
-
-Currently the static icon assets are being served from the go "proxy" server to the front end, but this adds unneccesary network calls, when these can be loaded locally from the electron window.
 
 # References
 
