@@ -1,0 +1,332 @@
+{
+    "8008": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "LethalTempo"
+    },
+    "8005": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "PressTheAttack"
+    },
+    "8021": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "FleetFootwork"
+    },
+    "8010": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "Conqueror"
+    },
+    "9101": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "AbsorbLife"
+    },
+    "9111": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "Triumph"
+    },
+    "8009": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "PresenceOfMind"
+    },
+
+    "9104": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "LegendAlacrity"
+    },
+    "9105": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "LegendHaste"
+    },
+    "UNKNOWN-9106": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "LegendBloodline"
+    },
+
+    "8014": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "CoupDeGrace"
+    },
+    "8017": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "CutDown"
+    },
+    "8299": {
+        "keystone": "7201_Precision",
+        "tree": "Precision",
+        "rune": "LastStand"
+    },
+
+
+
+    "8112": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "Electrocute"
+    },
+    "8128": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "DarkHarvest"
+    },
+    "UNKNOWN4": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "HailOfBlades"
+    },
+
+
+    "8126": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "CheapShot"
+    },
+    "8139": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "TasteOfBlood"
+    },
+    "8135": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "SuddenImpact"
+    },
+
+
+    "SixthSense": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "SixthSense"
+    },
+    "8140": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "GrislyMomentos"
+    },
+    "DeepWard": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "DeepWard"
+    },
+
+    "8143": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "TreasureHunter"
+    },
+    "RelentlessHunter": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "RelentlessHunder"
+    },
+    "8106": {
+        "keystone": "7200_Domination",
+        "tree": "Domination",
+        "rune": "UltimateHunter"
+    },
+
+
+    "8214": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "SummonAery"
+    },
+    "8229": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "ArcaneComet"
+    },
+    "8230": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "PhaseRush"
+    },
+
+    "8224": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "AxiomArcanist"
+    },
+    "8226": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "ManaflowBand"
+    },
+    "8275": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "NumbusCloak"
+    },
+
+    "8210": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "Transcendence"
+    },
+    "8234": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "Celerity"
+    },
+    "AbsoluteFocus": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "AbsoluteFocus"
+    },
+
+    "8237": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "Scorch"
+    },
+    "WaterWalking": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "WaterWalking"
+    },
+    "8236": {
+        "keystone": "7202_Sorcery",
+        "tree": "Sorcery",
+        "rune": "GatheringStorm"
+    },
+
+
+    "8437": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "GraspOfTheUndying"
+    },
+    "8439": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "VeteranAftershock"
+    },
+    "UNKNOWN8": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "Guardian"
+    },
+
+    "8446": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "Demolish"
+    },
+    "FrontOfLife": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "FrontOfLife"
+    },
+    "8401": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "ShieldBash"
+    },
+
+    "8429": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "BonePlating"
+    },
+    "8444": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "SecondWind"
+    },
+    "8473": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "BonePlating"
+    },
+
+    "8451": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "Overgrowth"
+    },
+    "8453": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "Revitalize"
+    },
+    "Unflinching": {
+        "keystone": "7204_Resolve",
+        "tree": "Resolve",
+        "rune": "Unflinching"
+    },
+
+
+    "UNKNOWN9": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "GlacialAugment"
+    },
+    "8369": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "FirstStrike"
+    },
+    "UNKNOWN11": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "UnsealedSpellbook"
+    },
+
+    "HextechFlash": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "HextechFlash"
+    },
+    "MagicalFootwear": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "MagicalFootwear"
+    },
+    "CashBack": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "CashBack"
+    },
+
+    "TripleTonic": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "TripleTonic"
+    },
+    "TimeWarpTonic": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "TimeWarpTonic"
+    },
+    "8345": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "BiscuitDelivery"
+    },
+
+    "CosmicInsight": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "CosmicInsight"
+    },
+    "8410": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "ApproachVelocity"
+    },
+    "JackOfAllTrades": {
+        "keystone": "7203_Whimsy",
+        "tree": "Inspiration",
+        "rune": "JackOfAllTrades"
+    }
+}

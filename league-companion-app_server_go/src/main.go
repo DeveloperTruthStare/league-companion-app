@@ -6,7 +6,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"strings"
 	"sync"
 	"time"
 
@@ -18,10 +17,13 @@ import (
 // Riot API configuration
 var apiKey = "" // Replace with your actual Riot API key
 const (
-	baseURL    = "https://americas.api.riotgames.com" // Adjust based on region
-	rateLimit  = 20                                   // Max requests per window
-	windowTime = time.Minute                          // Riot API rate limit window
+	rateLimit  = 20          // Max requests per window
+	windowTime = time.Minute // Riot API rate limit window
 )
+
+func getBaseUrl(subdomain string) string {
+	return "https://" + subdomain + ".api.riotgames.com"
+}
 
 // Rate limiter
 var limiter = rate.NewLimiter(rate.Every(windowTime/time.Duration(rateLimit)), rateLimit)
@@ -32,8 +34,15 @@ var apiCache = cache.New(10*time.Minute, 15*time.Minute)
 // Mutex for synchronizing cache access
 var cacheMutex sync.Mutex
 
-// Proxy handler
-func proxyHandler(w http.ResponseWriter, r *http.Request) {
+func americasHandler(w http.ResponseWriter, r *http.Request) {
+	proxyHandler(w, r, "americas")
+}
+
+func na1Handler(w http.ResponseWriter, r *http.Request) {
+	proxyHandler(w, r, "na1")
+}
+
+func proxyHandler(w http.ResponseWriter, r *http.Request, subdomain string) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
 	w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
@@ -43,8 +52,8 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Construct the Riot API URL
-	riotAPIPath := r.URL.Path[len("/riot/"):] // Remove the proxy prefix
-	riotAPIURL := fmt.Sprintf("%s/%s", baseURL, riotAPIPath)
+	riotAPIPath := r.URL.Path[len("/"+subdomain+"/"):] // Remove the proxy prefix
+	riotAPIURL := fmt.Sprintf("%s/%s", getBaseUrl(subdomain), riotAPIPath)
 
 	// Include query parameters
 	if r.URL.RawQuery != "" {
@@ -105,31 +114,6 @@ func proxyHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(body)
 }
 
-const CHAMPIONS = "champion"
-const ITEMS = "item"
-const STYLES = "styles"
-const SPELL = "spell"
-
-func staticHandler(w http.ResponseWriter, r *http.Request) {
-	pathPortion := r.URL.Path[len("/static/"):]
-	parts := strings.Split(pathPortion, "/")
-
-	switch parts[0] {
-	case CHAMPIONS:
-		championName := strings.ToUpper(parts[1][:1]) + parts[1][1:]
-		fmt.Println(championName)
-		http.ServeFile(w, r, fmt.Sprintf("./assets/champion/%s.png", championName))
-	case ITEMS:
-		http.ServeFile(w, r, fmt.Sprintf("./assets/item/%s.png", parts[1]))
-	case STYLES:
-		http.ServeFile(w, r, fmt.Sprintf("./assets/perk-images/Styles/%s.png", parts[1]))
-	case SPELL:
-		http.ServeFile(w, r, fmt.Sprintf("./assets/spell/%s.png", parts[1]))
-	default:
-		http.Error(w, "could not find thingy", http.StatusNotFound)
-	}
-}
-
 func main() {
 	err := godotenv.Load()
 	if err != nil {
@@ -141,10 +125,10 @@ func main() {
 		log.Fatal("API key not found in .env file")
 	}
 
-	http.HandleFunc("/static/", staticHandler)
-	http.HandleFunc("/riot/", proxyHandler)
+	http.HandleFunc("/americas/", americasHandler)
+	http.HandleFunc("/na1/", na1Handler)
 
-	port := 8080
+	port := 80
 	log.Printf("Proxy server running on port %d...", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%d", port), nil))
 }

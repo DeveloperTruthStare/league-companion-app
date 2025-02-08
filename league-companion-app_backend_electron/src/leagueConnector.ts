@@ -4,11 +4,8 @@ import WebSocket from 'ws';
 export type Summoner = {
     gameName: string;
     tag: string;
-    puuid: string;
     profileIconId: number;
-    accountId: number;
     summonerLevel: number;
-    summonerId: number;
 }
 
 export type GameflowSession = {

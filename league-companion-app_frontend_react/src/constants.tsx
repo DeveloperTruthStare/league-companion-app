@@ -11,3 +11,5 @@ export enum ConnectionStatus{
     STATE_PRE_END_GAME = 'PreEndOfGame',
     STATE_END_GAME = 'EndOfGame'
 }
+
+export const PROXY_SERVER_BASE_URL = "http://127.0.0.1";
