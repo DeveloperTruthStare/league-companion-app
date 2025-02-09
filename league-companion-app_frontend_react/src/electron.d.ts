@@ -1,4 +1,3 @@
-export {};
 
 export interface ElectronAPI {
     sendMessage: (channel: string, data: unknown) => void;
@@ -6,7 +5,7 @@ export interface ElectronAPI {
     removeListener: (channel: string, callback: (data: unknown) => void) => void;
     connectToLeagueClient: () => void;
     onVariableChange: (callback: (variable: unknown) => void) => void;
-    getVariable: () => Promise<string>;
+    getSummoner: () => Promise<Summoner>;
 };
 
 declare global {

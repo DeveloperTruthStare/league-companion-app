@@ -1,6 +1,7 @@
 import Alert from './components/Alert/Alert';
 import ElectronApp from './ElectronApp';
 import './App.css';
+
 function App() {
   if (window.electronAPI) {
     return <ElectronApp />

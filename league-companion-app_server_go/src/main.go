@@ -90,6 +90,7 @@ func proxyHandler(w http.ResponseWriter, r *http.Request, subdomain string) {
 	resp, err := client.Do(req)
 	if err != nil {
 		http.Error(w, "Failed to fetch from Riot API", http.StatusInternalServerError)
+		fmt.Println("Failed to create request, API_KEY is probably expired")
 		return
 	}
 	defer resp.Body.Close()

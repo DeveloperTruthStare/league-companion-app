@@ -2,6 +2,7 @@ import { app, BrowserWindow, clipboard, desktopCapturer, ipcMain, session } from
 import path from 'path';
 import { LeagueConnector, ILeagueCallbacks } from './leagueConnector';
 import { strings, discordLink, twitchLink } from './constants';
+import { initDB, insertUser, getUserByName, closeDB } from './sqlite';
 
 let myCallbackThing: ILeagueCallbacks = {
     makeCallback: (route: string, data: unknown) => {
@@ -19,9 +20,18 @@ let myCallbackThing: ILeagueCallbacks = {
     }
 };
 
+initDB().then(() => console.log("DB INIT"));
 
 let mainWindow: BrowserWindow | null = null;
 let leagueConnector: LeagueConnector = new LeagueConnector(myCallbackThing);
+leagueConnector.onUserFound = async (gameName: string, tagLine: string, puuid: string) => {
+    var user = await getUserByName(gameName, tagLine);
+    if (user === undefined) {
+        // User not found
+        user = await insertUser(puuid, gameName, tagLine);
+        let matchHistory = await leagueConnector.getMatchHistory(user.puuid);
+    }
+};
 
 const createWindow = () => {
     mainWindow = new BrowserWindow({
@@ -72,10 +82,10 @@ app.on('window-all-closed', () => {
     }
 });
 
-ipcMain.on('league-client', async (event, data) => {
+ipcMain.on('league-client/reconnect', async (event, data) => {
     if (leagueConnector.connected) {
         // Send to window
-
+        mainWindow?.webContents.send('connection-status', 'Connected');
     } else {
         leagueConnector.connectToLeague();
     }
@@ -90,6 +100,22 @@ ipcMain.handle('get-sources', async () => {
     return await desktopCapturer.getSources({ types: ["window", "screen"]});
 })
 
-ipcMain.handle('get-variable', () => {
+ipcMain.handle('get-summoner', () => {
     return leagueConnector.summoner;
 })
+
+process.on("SIGINT", async () => {
+    await closeDB();
+    process.exit(0);
+})
+
+/*
+onLaunch | onUserChange => {
+    // Download everything about the user's profile and cache it locally
+    currentRank
+    matchHistory
+
+    .then() => // save it to a database
+}
+
+*/

@@ -3,24 +3,6 @@ import { useState, useEffect } from 'react';
 import MatchSummary from './MatchSummary/MatchSummary';
 import { PROXY_SERVER_BASE_URL } from '../constants';
 
-type Summoner = {
-  gameName: string;
-  tagLine: string;
-  profileIconId: number;
-  summonerLevel: number;
-  rankDivision: string;
-  rankNumber: string;
-  lp: string;
-}
-
-type RankData = {
-  tier: string;
-  rank: string;
-  leaguePoints: number;
-  wins: number;
-  loses: number;
-  queueType: string;
-}
 
 const Home = () => {
   const [summoner, setSummoner] = useState<Summoner | null>(null);
@@ -32,16 +14,24 @@ const Home = () => {
 
   const [rankData, setRankData] = useState<RankData | null>(null);
 
+  // If the summoner hasn't been set query the electron window for the summoner info
   if (!summoner) {
-    window.electronAPI.getVariable().then((updatedSummoner: unknown) => {
+    window.electronAPI.getSummoner().then((updatedSummoner: unknown) => {
       setSummoner(updatedSummoner as Summoner);
     });
   }
-  window.electronAPI.onVariableChange((updatedSummoner: unknown) => {
-    setSummoner(updatedSummoner as Summoner)
-  });
+  // Call back function for once the electron window gets the current summoner info
+  useEffect(() => {
+    const handleSummoner = (newSummoner: unknown) => {
+      setSummoner(newSummoner as Summoner);
+    };
 
+    window.electronAPI.on('summoner', handleSummoner);
 
+    return window.electronAPI.removeListener('summoner', handleSummoner);
+  }, []);
+
+  // Once the summoner is set from the electron window: get user puuid from provided gameName and tagLine
   useEffect(() => {
     if (!summoner) return;
     fetch(`${PROXY_SERVER_BASE_URL}/americas/riot/account/v1/accounts/by-riot-id/${summoner.gameName}/${summoner.tagLine}`)
@@ -59,10 +49,38 @@ const Home = () => {
     .catch((err) => console.error(err));
   }, [summoner]);
 
+  // Once we have the puuid, get the most recent 20 matchs by puuid
   useEffect(() => {
     if (!userPuuid) return;
 
-      fetch(`${PROXY_SERVER_BASE_URL}/americas/lol/match/v5/matches/by-puuid/${userPuuid}/ids`)
+    fetch(`${PROXY_SERVER_BASE_URL}/americas/lol/match/v5/matches/by-puuid/${userPuuid}/ids`)
+    .then((response) => {
+      if (!response.ok) {
+        setHasError(true);
+        setError(String(response.status));
+      }
+      return response.json();
+    })
+    .then((json) => {
+      setMatchHistory(json as string[]);
+    })
+    .catch((err) => console.error(err));
+  }, [userPuuid]);
+
+  // Once we have the puuid get the summonerId, then the summoner's ranked info
+  useEffect(() => {
+    if (!userPuuid) return;
+    fetch(`${PROXY_SERVER_BASE_URL}/na1/lol/summoner/v4/summoners/by-puuid/${userPuuid}`)
+    .then((response) => {
+      if (!response.ok) {
+        setHasError(true);
+        setError(String(response.status));
+      }
+      return response.json();
+    })
+    .then((json) => {
+      const summonerId = json['id'];
+      fetch(`${PROXY_SERVER_BASE_URL}/na1/lol/league/v4/entries/by-summoner/${summonerId}`)
       .then((response) => {
         if (!response.ok) {
           setHasError(true);
@@ -71,36 +89,10 @@ const Home = () => {
         return response.json();
       })
       .then((json) => {
-        setMatchHistory(json as string[]);
+        console.log(json);
+        setRankData(json[0] as RankData);
       })
-      .catch((err) => console.error(err));
-
-      fetch(`${PROXY_SERVER_BASE_URL}/na1/lol/summoner/v4/summoners/by-puuid/${userPuuid}`)
-      .then((response) => {
-        if (!response.ok) {
-          setHasError(true);
-          setError(String(response.status));
-        }
-        return response.json();
-      })
-      .then((json) => {
-        const summonerId = json['id'];
-
-        fetch(`${PROXY_SERVER_BASE_URL}/na1/lol/league/v4/entries/by-summoner/${summonerId}`)
-        .then((response) => {
-          if (!response.ok) {
-            setHasError(true);
-            setError(String(response.status));
-          }
-          return response.json();
-        })
-        .then((json) => {
-          console.log(json);
-          setRankData(json[0] as RankData);
-        })
-
-      })
-
+    })
   }, [userPuuid]);
 
   return (
@@ -121,7 +113,7 @@ const Home = () => {
         <h5>Rank Solo/Duo</h5>
         <div className="separator" />
         <div className="rankDisplayArea">
-          <img src={`/rank/${summoner.rankDivision}`} />
+          <img src={`/rank/${rankData?.tier}`} />
           <div className="rankInfo">
             {rankData != null && <>
             <h2>{rankData.tier} {rankData.rank}</h2>

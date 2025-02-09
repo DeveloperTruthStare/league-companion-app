@@ -11,10 +11,5 @@ contextBridge.exposeInMainWorld('electronAPI', {
     connectToLeagueClient: () => {
         ipcRenderer.send('league-client', 'reconnect');
     },
-    onVariableChange: (callback: (variable: unknown) => void) => {
-        ipcRenderer.on('variable-updated', (event, variable) => {
-            callback(variable);
-        })
-    },
-    getVariable: () => ipcRenderer.invoke('get-variable')
+    getSummoner: () => ipcRenderer.invoke('get-summoner')
 });

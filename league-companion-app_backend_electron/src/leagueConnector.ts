@@ -1,9 +1,10 @@
 import find from 'find-process';
 import WebSocket from 'ws';
+import { LOCAL_HOST, LOCAL_HOST_S, LOCAL_WEB_SOCKET, PROXY_SERVER_BASE_URL } from './constants';
 
 export type Summoner = {
     gameName: string;
-    tag: string;
+    tagLine: string;
     profileIconId: number;
     summonerLevel: number;
 }
@@ -27,9 +28,11 @@ export class LeagueConnector {
     auth: string = '';
     summoner: Summoner | null = null;
     callback: ILeagueCallbacks;
+    onUserFound: (gameName: string, tagLine: string, puuid: string) => void;
 
     constructor(callbackObject: ILeagueCallbacks) {
         this.callback = callbackObject;
+        this.onUserFound = () => {};
     }
 
     connectToLeague = async () => {
@@ -66,7 +69,7 @@ export class LeagueConnector {
     }
     
     startWebSocket = () => {
-        const url = `wss://127.0.0.1:${this.port}`;
+        const url = `${LOCAL_WEB_SOCKET}:${this.port}`;
         const headers = {
             Authorization: `Basic ${Buffer.from(`riot:${this.auth}`).toString('base64')}`,
             'User-Agent': 'LeagueClient (WebSocket)' 
@@ -76,10 +79,10 @@ export class LeagueConnector {
     
         ws.on('open', () => {
             ws.send(JSON.stringify([5, "OnJsonApiEvent"]));
-            this.callback.makeCallback("custom-update", "Connected");
+            this.callback.makeCallback("connection-status", "Connected");
     
-            this.getLolGameflowSession();
             this.getCurrentSummoner();
+            this.getLolGameflowSession();
         });
     
         ws.on('message', (data) => {
@@ -90,20 +93,18 @@ export class LeagueConnector {
                 if (message[2]?.uri === '/lol-gameflow/v1/session') {
                     const phase = message[2]?.data?.phase;
                     this.callback.makeCallback("lol-gameflow", phase);
+                } if (message[2]?.uri === '/lol-matchmaking/v1/search') {
+                    //console.log(`MATCHMAKING: ${data.toString()}`)
+                }else {
+                    //console.log(`RECV MSG: ${message[2].uri}`);
                 }
             } catch (error) {
                 console.error('Error parsing message:', data.toString());
-                // wait 6s then start trying to reconnect
-                setTimeout(() => {
-                    this.connected = false;
-                    this.connecting = false;
-                    this.connectToLeague();
-                }, 6000);
             }
         });
     
         ws.on('error', (error) => {
-            this.callback.makeCallback("custom-update", "Disconnected")
+            this.callback.makeCallback("connection-status", "Disconnected")
             console.error('WebSocket error:', error);
         });
     }
@@ -111,7 +112,7 @@ export class LeagueConnector {
     clientCall = async <T>(route: string,
                               callback: (data: T) => void): Promise<Response> => {
         process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-        const url = `https://127.0.0.1:${this.port}${route}`;
+        const url = `${LOCAL_HOST_S}:${this.port}${route}`;
     
         const response = await fetch(url, {
             method: "GET",
@@ -128,12 +129,20 @@ export class LeagueConnector {
         callback(data);
         return response;
     }
-    
     getCurrentSummoner = async (): Promise<void> => {
+        console.log("Getting Current Summoner");
         const route = '/lol-summoner/v1/current-summoner'
         const error = await this.clientCall<Summoner>(route, async (data: Summoner) => {
             this.summoner = data;
-            this.callback.makeCallback('variable-updated', this.summoner);
+            // Call riot API proxy to get puudi
+            const gameName = this.summoner.gameName;
+            const tagLine = this.summoner.tagLine;
+            this.callback.makeCallback('summoner', this.summoner);
+            fetch(`${PROXY_SERVER_BASE_URL}/americas/riot/account/v1/accounts/by-riot-id/${this.summoner.gameName}/${this.summoner.tagLine}`)
+            .then(response => response.json())
+            .then((json) => {
+                this.onUserFound(gameName, tagLine, json['puuid']);
+            });
         });
     
         if (!error.ok) {
@@ -154,6 +163,10 @@ export class LeagueConnector {
                 console.error(`Erorr calling ${route}:`);
             }
         }
+    }
+
+    getMatchHistory = async (puuid: string): Promise<any> => {
+        const route = '/americas/'
     }
 };
     
