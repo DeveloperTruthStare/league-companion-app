@@ -3,25 +3,8 @@ import Alert from './components/Alert/Alert';
 import Home from './Home/Home';
 
 function ElectronApp() {
-  const [gameState, setGameState] = useState('uninitialized');
   const [connected, setConnected] = useState(false);
   const [showAlert, setShowAlert] = useState(true);
-
-  // Handle callback for lol-gameflow
-  useEffect(() => {
-    const handleGameflowChange = (newState: unknown) => {
-      setConnected(true);
-      if (newState as string != gameState) {
-        setGameState(newState as string);
-      }
-    }
-
-    window.electronAPI.on('lol-gameflow', handleGameflowChange);
-
-    return () => {
-      window.electronAPI.removeListener('lol-gameflow', handleGameflowChange);
-    };
-  }, [gameState, connected]);
 
   // Handle callback for connection-status
   useEffect(() => {
@@ -30,6 +13,7 @@ function ElectronApp() {
     }
 
     const handleGeneralUpdate = (status: unknown) => {
+      console.log("Got new Connection status");
       setConnected((status as string) === 'Connected');
     };
 

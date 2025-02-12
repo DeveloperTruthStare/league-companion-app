@@ -13,6 +13,9 @@ declare global {
         tagLine: string;
         profileIconId: number;
         summonerLevel: number;
+        matchHistory: string[];
+        puuid: string;
+        rankData: RankData;
     }
 }
 

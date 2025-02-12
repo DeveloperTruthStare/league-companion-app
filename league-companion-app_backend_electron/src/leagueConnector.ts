@@ -1,17 +1,11 @@
 import find from 'find-process';
 import WebSocket from 'ws';
-import { LOCAL_HOST, LOCAL_HOST_S, LOCAL_WEB_SOCKET, PROXY_SERVER_BASE_URL } from './constants';
+import { LOCAL_HOST_S, LOCAL_WEB_SOCKET, PROXY_SERVER_BASE_URL } from './constants';
 
-export type Summoner = {
-    gameName: string;
-    tagLine: string;
-    profileIconId: number;
-    summonerLevel: number;
-}
 
 export type GameflowSession = {
     phase: string
-}
+};
 
 type Result<T, E> = 
     | { success: true, data: T }
@@ -19,7 +13,18 @@ type Result<T, E> =
 
 export interface ILeagueCallbacks {
     makeCallback: (route: string, data: unknown) => void;
-}
+};
+
+export const enum InfoState {
+    NoInfo = 0x0,
+    NoExtraInfo = 0x1,
+    NoRankInfo = 0x11,
+    NoMatchHistory = 0x101,
+    Ready = 0x111,
+    SummonerInfo = 0x1,
+    RankData = 0x100,
+    MatchHistory = 0x010
+};
 
 export class LeagueConnector {
     connected: boolean = false;
@@ -29,10 +34,15 @@ export class LeagueConnector {
     summoner: Summoner | null = null;
     callback: ILeagueCallbacks;
     onUserFound: (gameName: string, tagLine: string, puuid: string) => void;
+    onInfoStateChanged: (newState: InfoState, data: Summoner) => void;
+
+    state: InfoState;
 
     constructor(callbackObject: ILeagueCallbacks) {
         this.callback = callbackObject;
         this.onUserFound = () => {};
+        this.onInfoStateChanged = () => {};
+        this.state = InfoState.NoInfo;
     }
 
     connectToLeague = async () => {
@@ -138,11 +148,17 @@ export class LeagueConnector {
             const gameName = this.summoner.gameName;
             const tagLine = this.summoner.tagLine;
             this.callback.makeCallback('summoner', this.summoner);
-            fetch(`${PROXY_SERVER_BASE_URL}/americas/riot/account/v1/accounts/by-riot-id/${this.summoner.gameName}/${this.summoner.tagLine}`)
-            .then(response => response.json())
-            .then((json) => {
-                this.onUserFound(gameName, tagLine, json['puuid']);
-            });
+
+            this.state = InfoState.NoExtraInfo;
+            this.onInfoStateChanged(this.state, this.summoner);
+            const puuid = await this.getPuuid(gameName, tagLine);
+            this.onUserFound(gameName, tagLine, puuid);
+
+            const rankData = await this.getRankInfo(puuid);
+            this.summoner.rankData = rankData;
+            this.state = this.state | InfoState.RankData;
+
+            this.onInfoStateChanged(this.state, this.summoner);
         });
     
         if (!error.ok) {
@@ -150,6 +166,17 @@ export class LeagueConnector {
         }
     }
     
+    getPuuid = async (gameName: string, tagLine: string): Promise<string> => {
+        const route = `/americas/riot/account/v1/accounts/by-riot-id/${gameName}/${tagLine}`
+        const response = await fetch(`${PROXY_SERVER_BASE_URL}${route}`);
+        if (!response.ok) {
+            console.error(`Error fetching: ${route}`);
+            return '';
+        }
+        const json = await response.json();
+        return json['puuid'];
+    } 
+
     getLolGameflowSession = async (): Promise<void> => {
         const route = '/lol-gameflow/v1/session';
         const error = await this.clientCall<GameflowSession>(route, async (gameSession: GameflowSession) => {
@@ -165,8 +192,29 @@ export class LeagueConnector {
         }
     }
 
-    getMatchHistory = async (puuid: string): Promise<any> => {
-        const route = '/americas/'
+    getRankInfo = async (puuid: string): Promise<RankData> => {
+        const route1 = `/na1/lol/summoner/v4/summoners/by-puuid/${puuid}`;
+        const response = await fetch(`${PROXY_SERVER_BASE_URL}${route1}`);
+        if (!response.ok) {
+            console.log(`Failed to Fetch ${route1}`);
+        }
+        const json = await response.json();
+        const summonerId = json['id'];
+
+        const route2 = `/na1/lol/league/v4/entries/by-summoner/${summonerId}`;
+        const response2 = await fetch(`${PROXY_SERVER_BASE_URL}${route2}`);
+        if (!response2.ok) {
+            console.log(`Failed to Fetch ${route2}`);
+        }
+        const json2 = await response2.json();
+        return json2[0] as RankData;
+    }
+
+    getMatchHistory = async (puuid: string, start: number, count: number): Promise<Match[]> => {
+        const route = `/americas/lol/match/v5/matches/by-puuid/${puuid}/ids`
+        var response = await fetch(`${PROXY_SERVER_BASE_URL}${route}?start=${start}&count=${count}`)
+        var json = await response.json();
+        console.log(`Retrieved Matches: ${json}`);
+        return json as Match[];
     }
 };
-    

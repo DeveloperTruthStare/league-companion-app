@@ -1,8 +1,8 @@
 import { app, BrowserWindow, clipboard, desktopCapturer, ipcMain, session } from 'electron';
 import path from 'path';
-import { LeagueConnector, ILeagueCallbacks } from './leagueConnector';
+import { LeagueConnector, ILeagueCallbacks, InfoState } from './leagueConnector';
 import { strings, discordLink, twitchLink } from './constants';
-import { initDB, insertUser, getUserByName, closeDB } from './sqlite';
+import { initDB, insertUser, getUserByName, closeDB, getMatchHistory, insertMatchHistory } from './sqlite';
 
 let myCallbackThing: ILeagueCallbacks = {
     makeCallback: (route: string, data: unknown) => {
@@ -24,12 +24,42 @@ initDB().then(() => console.log("DB INIT"));
 
 let mainWindow: BrowserWindow | null = null;
 let leagueConnector: LeagueConnector = new LeagueConnector(myCallbackThing);
+leagueConnector.onInfoStateChanged = (newState: InfoState, data: Summoner) => {
+    console.log("Sending data to front end");
+    mainWindow?.webContents.send('state-change', { newState: newState, summoner: data});
+};
+
 leagueConnector.onUserFound = async (gameName: string, tagLine: string, puuid: string) => {
     var user = await getUserByName(gameName, tagLine);
     if (user === undefined) {
         // User not found
         user = await insertUser(puuid, gameName, tagLine);
-        let matchHistory = await leagueConnector.getMatchHistory(user.puuid);
+        const savedMatchHistory = await getMatchHistory(user.puuid);
+        const COUNT = 100;
+        var start = 0;
+        if (savedMatchHistory.length === 0) {
+            var newMatches: Match[] = [];
+            do {
+                newMatches = await leagueConnector.getMatchHistory(puuid, start, COUNT);
+                newMatches.map((match, _) => (
+                    insertMatchHistory(String(match.matchId), puuid, match.data, match.timeEnded)
+                ));
+                start += COUNT;
+            } while (newMatches.length != COUNT);
+        } else {
+            var foundMatch = false;
+            let mostRecentMatch = savedMatchHistory[0];
+            do {
+                newMatches = await leagueConnector.getMatchHistory(puuid, start, COUNT);
+                for(var i = 0; i < newMatches.length; ++i) {
+                    if (newMatches[i].matchId == mostRecentMatch.matchId) {
+                        foundMatch = true;
+                        break;
+                    }
+                    insertMatchHistory(String(newMatches[i].matchId), puuid, newMatches[i].data, newMatches[i].timeEnded);
+                }
+            } while (foundMatch);
+        }
     }
 };
 
@@ -118,4 +148,32 @@ onLaunch | onUserChange => {
     .then() => // save it to a database
 }
 
+state = NoInfo
+
+SetState = NoExtraInfo
+
+State |= RankInfo = RankInfo
+State |= MatchHistory = Ready
+
+State = NoExtraInfo
+State |= MatchHistory = MatchHistory
+State |= RankInfo = Ready
+
+NoInfo = 0
+NoExtraInfo = 0x1
+RankInfo = 0x11
+MatchHistory = 0x101
+Ready = 0x111
+
+// Start window with loading screen
+SetState(NoInfo);
+
+- Call ps for client api details
+
+- Call client api for current summoner
+SetState(NoExtraInfo);
+- Check local db if summoner exists
+-- if yes goto SECTION_A
+-- if no pull summoner data from server
+--- go to SECTION_A
 */

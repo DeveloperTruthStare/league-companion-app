@@ -51,6 +51,9 @@ export async function insertMatchHistory(matchId: string, playerPuuid: string, m
     await db.run("INSERT INTO matchHistory (matchId, playerPuuid, matchInfo, timeEnded) VALUES (?, ?, ?, ?);", [matchId, playerPuuid, matchInfo, timeEnded]);
 }
 
+export async function getMatchHistory(puuid: string): Promise<Match[]> {
+    return (await db.get("SELECT * FROM matchHistory WHERE playerPuuid = ? ORDER BY timeEnded DESC", [puuid])) as Match[];
+}
 
 export async function closeDB() {
     if (db) {
