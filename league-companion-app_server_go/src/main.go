@@ -6,33 +6,17 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"sync"
 	"time"
 
 	"github.com/joho/godotenv"
-	"github.com/patrickmn/go-cache"
-	"golang.org/x/time/rate"
 )
 
 // Riot API configuration
 var apiKey = "" // Replace with your actual Riot API key
-const (
-	rateLimit  = 20          // Max requests per window
-	windowTime = time.Minute // Riot API rate limit window
-)
 
 func getBaseUrl(subdomain string) string {
 	return "https://" + subdomain + ".api.riotgames.com"
 }
-
-// Rate limiter
-var limiter = rate.NewLimiter(rate.Every(windowTime/time.Duration(rateLimit)), rateLimit)
-
-// Cache for API responses
-var apiCache = cache.New(10*time.Minute, 15*time.Minute)
-
-// Mutex for synchronizing cache access
-var cacheMutex sync.Mutex
 
 func americasHandler(w http.ResponseWriter, r *http.Request) {
 	proxyHandler(w, r, "americas")
@@ -60,23 +44,6 @@ func proxyHandler(w http.ResponseWriter, r *http.Request, subdomain string) {
 		riotAPIURL += "?" + r.URL.RawQuery
 	}
 
-	// Check if response is cached
-	cacheMutex.Lock()
-	if cachedResponse, found := apiCache.Get(riotAPIURL); found {
-		cacheMutex.Unlock()
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-		w.Write(cachedResponse.([]byte))
-		return
-	}
-	cacheMutex.Unlock()
-
-	// Enforce rate limit
-	if err := limiter.Wait(r.Context()); err != nil {
-		http.Error(w, "Rate limit exceeded", http.StatusTooManyRequests)
-		return
-	}
-
 	// Make the actual API request
 	req, err := http.NewRequest("GET", riotAPIURL, nil)
 	if err != nil {
@@ -100,13 +67,6 @@ func proxyHandler(w http.ResponseWriter, r *http.Request, subdomain string) {
 	if err != nil {
 		http.Error(w, "Failed to read response", http.StatusInternalServerError)
 		return
-	}
-
-	// Cache the response only for successful requests
-	if resp.StatusCode == http.StatusOK {
-		cacheMutex.Lock()
-		apiCache.Set(riotAPIURL, body, 5*time.Minute) // Adjust cache duration as needed
-		cacheMutex.Unlock()
 	}
 
 	// Forward response to client
