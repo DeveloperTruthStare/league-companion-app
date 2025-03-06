@@ -278,13 +278,7 @@ const MatchSummary = ({ match, userPuuid }: Props) => {
                         </div>
                     ))}
                 </div>
-                <div>
-                    <img src="/resource/top" />
-                    <img src="/resource/jungle" />
-                    <img src="/resource/mid" />
-                    <img src="/resource/bot" />
-                    <img src="/resource/support" />
-                </div>
+                <div></div>
                 <div>
                     {match.info.participants.slice(5, 10).map((player, index) => (
                         <div key={index+5} className="riotIdGameName redSide" >
