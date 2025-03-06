@@ -47,12 +47,13 @@ export async function getUserByName(gameName: string, tagLine: string) {
     return await db.get("SELECT * FROM users WHERE gameName = ? AND tagLine = ? LIMIT 1;", [gameName, tagLine]);
 }
 
-export async function insertMatchHistory(matchId: string, playerPuuid: string, matchInfo: string, timeEnded: number) {
-    await db.run("INSERT INTO matchHistory (matchId, playerPuuid, matchInfo, timeEnded) VALUES (?, ?, ?, ?);", [matchId, playerPuuid, matchInfo, timeEnded]);
+export async function insertMatchHistory(matchId: string, playerPuuid: string, matchInfo: string, queueId: number, timeEnded: number) {
+    await db.run("INSERT INTO matchHistory (matchId, playerPuuid, matchInfo, queueId, timeEnded) VALUES (?, ?, ?, ?, ?);", [matchId, playerPuuid, matchInfo, queueId, timeEnded]);
 }
 
-export async function getMatchHistory(puuid: string): Promise<Match[]> {
-    return (await db.get("SELECT * FROM matchHistory WHERE playerPuuid = ? ORDER BY timeEnded DESC", [puuid])) as Match[];
+export async function getMatchHistory(puuid: string): Promise<MatchDto[]> {
+    const rows = await db.all("SELECT matchInfo FROM matchHistory WHERE playerPuuid = ? ORDER BY timeEnded DESC", [puuid]);
+    return rows.map(row => JSON.parse(row.matchInfo));
 }
 
 export async function closeDB() {

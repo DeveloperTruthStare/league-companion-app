@@ -41,8 +41,8 @@ const Home = () => {
       <div className="matchHistory">
         <h1><b>Match History</b></h1>
         <div className="separator" />
-        {summoner?.matchHistory.map((item, index) => (
-          <MatchSummary key={index} matchId={item} userPuuid={summoner.puuid} />
+        {summoner?.matchHistory.map((match, index) => (
+          <MatchSummary key={index} match={match} userPuuid={summoner.puuid} />
         ))}
       </div>
   </> : 
@@ -55,11 +55,11 @@ const Home = () => {
       <h5>Rank Solo/Duo</h5>
       <div className="separator" />
       <div className="rankDisplayArea">
-        <img src={`/rank/${summoner?.rankData?.tier}`} />
+        <img src={`/rank/${summoner?.rankData?.tier}.webp`} className="rankImage" />
         <div className="rankInfo">
           {showRankInfo ? <>
             <h2>{summoner?.rankData.tier} {summoner?.rankData.rank}</h2>
-            {summoner?.rankData.leaguePoints} LP
+            <span>{summoner?.rankData.leaguePoints} LP</span>
           </> : 
             "Loading Ranked Data"
           }
