@@ -7,7 +7,7 @@ This is a simple, lightweight League of Legends Companion App written in Typescr
 - [x] View Match history
 - [x] Multiple Account Support (Kind of working)
 - [ ] Auto recording league of legends games
-- [ ] Match Notes'
+- [ ] Matchup Notes
 
 ## Preview as of 2025/03/06
 
