@@ -72,10 +72,23 @@ div.matchHistory {
 
 .rankDisplayArea {
     display: grid;
-    grid-template-columns: 1fr 3fr;
+    grid-template-columns: 1fr 2fr;
 }
 
 .rankInfo {
     display: grid;
     grid-template-rows: 1fr 1fr;
+}
+
+.rankInfo > h2 {
+    margin-top: auto;
+}
+
+.rankInfo > span {
+    
+}
+
+.rankImage {
+    width: 90%;
+    margin: auto;
 }

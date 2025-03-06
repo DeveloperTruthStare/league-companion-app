@@ -140,7 +140,7 @@ export class LeagueConnector {
         return response;
     }
     getCurrentSummoner = async (): Promise<void> => {
-        console.log("Getting Current Summoner");
+        console.log("Getting Current Summoner from Client");
         const route = '/lol-summoner/v1/current-summoner'
         const error = await this.clientCall<Summoner>(route, async (data: Summoner) => {
             this.summoner = data;
@@ -148,10 +148,11 @@ export class LeagueConnector {
             const gameName = this.summoner.gameName;
             const tagLine = this.summoner.tagLine;
             this.callback.makeCallback('summoner', this.summoner);
+            const puuid = await this.getPuuid(gameName, tagLine);
+            this.summoner.puuid = puuid;
 
             this.state = InfoState.NoExtraInfo;
             this.onInfoStateChanged(this.state, this.summoner);
-            const puuid = await this.getPuuid(gameName, tagLine);
             this.onUserFound(gameName, tagLine, puuid);
 
             const rankData = await this.getRankInfo(puuid);
@@ -210,11 +211,25 @@ export class LeagueConnector {
         return json2[0] as RankData;
     }
 
-    getMatchHistory = async (puuid: string, start: number, count: number): Promise<Match[]> => {
+    getMatchHistory = async (puuid: string, start: number, count: number): Promise<string[]> => {
         const route = `/americas/lol/match/v5/matches/by-puuid/${puuid}/ids`
         var response = await fetch(`${PROXY_SERVER_BASE_URL}${route}?start=${start}&count=${count}`)
         var json = await response.json();
-        console.log(`Retrieved Matches: ${json}`);
-        return json as Match[];
+        return json as string[];
+    }
+
+    getMatchData = async (matchId: string): Promise<MatchDto> => {
+        const route = `/americas/lol/match/v5/matches/${matchId}`
+        var response = await fetch(`${PROXY_SERVER_BASE_URL}${route}`)
+        var json = await response.json();
+        return json as MatchDto;
+    }
+
+    setMatchHistory = (matchHistory: MatchDto[]) => {
+        if (this.summoner == null) return;
+        this.summoner.matchHistory = matchHistory;
+
+        this.state = this.state | InfoState.MatchHistory;
+        this.onInfoStateChanged(this.state, this.summoner);
     }
 };

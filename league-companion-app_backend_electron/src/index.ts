@@ -29,38 +29,50 @@ leagueConnector.onInfoStateChanged = (newState: InfoState, data: Summoner) => {
     mainWindow?.webContents.send('state-change', { newState: newState, summoner: data});
 };
 
+const insertMatch = async (matchId: string, puuid: string) => {    
+    var matchData = await leagueConnector.getMatchData(matchId);
+    insertMatchHistory(matchId, puuid, JSON.stringify(matchData), matchData.info.queueId, matchData.info.gameEndTimestamp);
+}
+
 leagueConnector.onUserFound = async (gameName: string, tagLine: string, puuid: string) => {
     var user = await getUserByName(gameName, tagLine);
     if (user === undefined) {
-        // User not found
+        console.log(`Registering ${gameName}#${tagLine} to the local database`);
         user = await insertUser(puuid, gameName, tagLine);
-        const savedMatchHistory = await getMatchHistory(user.puuid);
-        const COUNT = 100;
-        var start = 0;
-        if (savedMatchHistory.length === 0) {
-            var newMatches: Match[] = [];
-            do {
-                newMatches = await leagueConnector.getMatchHistory(puuid, start, COUNT);
-                newMatches.map((match, _) => (
-                    insertMatchHistory(String(match.matchId), puuid, match.data, match.timeEnded)
-                ));
-                start += COUNT;
-            } while (newMatches.length != COUNT);
-        } else {
-            var foundMatch = false;
-            let mostRecentMatch = savedMatchHistory[0];
-            do {
-                newMatches = await leagueConnector.getMatchHistory(puuid, start, COUNT);
-                for(var i = 0; i < newMatches.length; ++i) {
-                    if (newMatches[i].matchId == mostRecentMatch.matchId) {
-                        foundMatch = true;
-                        break;
-                    }
-                    insertMatchHistory(String(newMatches[i].matchId), puuid, newMatches[i].data, newMatches[i].timeEnded);
-                }
-            } while (foundMatch);
-        }
     }
+
+    console.log(`User PUUID: ${user.puuid}`);
+
+    const savedMatchHistory = await getMatchHistory(user.puuid);
+    const COUNT = 100;
+    var start = 0;
+    if (savedMatchHistory.length === 0) {
+        var newMatches: string[] = [];
+        do {
+            newMatches = await leagueConnector.getMatchHistory(puuid, start, COUNT);
+            newMatches.map((match, _) => (
+                insertMatch(match, puuid)
+            ));
+            start += COUNT;
+        } while (newMatches.length === COUNT);
+
+    } else {
+        var foundMatch = false;
+        let mostRecentMatch = savedMatchHistory[0];
+        do {
+            newMatches = await leagueConnector.getMatchHistory(puuid, start, COUNT);
+            for(var i = 0; i < newMatches.length; ++i) {
+                if (newMatches[i] == mostRecentMatch.metadata.matchId) {
+                    foundMatch = true;
+                    break;
+                }
+                
+                insertMatch(newMatches[i], puuid);
+            }
+        } while (!foundMatch);
+    }
+    // Now it is possible to give the match history to the front end.
+    leagueConnector.setMatchHistory(await getMatchHistory(puuid));
 };
 
 const createWindow = () => {

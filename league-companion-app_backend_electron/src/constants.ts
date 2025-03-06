@@ -1,4 +1,4 @@
-export const twitchLink = "https://twitch.tv/devilishtruthstare";
+export const twitchLink = "https://twitch.tv/queenspuppy";
 export const discordLink = "https://discord.gg/zPcYztZdX4";
 export const strings = [
     "Streaming on Twitch—need the views to prove to my mom this is a real career. 🙃",
@@ -21,3 +21,4 @@ export const LOCAL_HOST = "http://127.0.0.1";
 export const LOCAL_HOST_S = "https://127.0.0.1";
 export const LOCAL_WEB_SOCKET = "wss://127.0.0.1";
 export const PROXY_SERVER_BASE_URL = "http://127.0.0.1";
+

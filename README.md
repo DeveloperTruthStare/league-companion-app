@@ -1,95 +1,37 @@
 # League Companion App
 
-This project's purpose is for me to learn Typescript, React, electron and other front end tools/frameworks. I plan to add features that I believe other programs/sites would benefit from, however due to the requirement of an external server to access riot api's there is no planned release of this.
+This is a simple, lightweight League of Legends Companion App written in Typescript using React and Electron.
 
-## Current Status as of 2025/02/08
+## Features
 
-![Status as of February 6th 2025](/assets/status_02_08_2025.png)
+- [x] View Match history
+- [x] Multiple Account Support (Kind of working)
+- [ ] Auto recording league of legends games
+- [ ] Match Notes'
 
-## What is each project here
+## Preview as of 2025/03/06
+
+![Status as of March 6th 2025](/assets/status_03_06_2025.png)
+
+## Directory Structure/Explanation
 
 ### [league-companion-app_backend_electron](/league-companion-app_backend_electron/)
 
-This is the electron code which manages the window and the state of data using typescript. This creates the window displays a webpage (the react frontend compiled into static html/js/css) and makes calls to the client running on the same computer using the league client api.
+This is the electron code which manages the window and caches data like match history using typescript/sqlite.
 
 ### [league-companion-app_frontend_react](/league-companion-app_frontend_react/)
 
-This is the main UI code, built using react and typescript. This is compiled into static html/css/javascript code and then used by electron.
+This is the main UI code, built using react and typescript. This is later compiled into static html/css/javascript code and then referenced by electron.
 
 ### [league-companion-app_server_go](/league-companion-app_server_go/)
 
-This is basically a proxy server which holds the RIOT_API_KEY. This limits the calls to ensure riot guidelines are being followed, as well as caches games and data to reduce total calls to riot server.
+This is simply a proxy server which holds the RIOT_API_KEY in a .env file. Because you can't distribute an Api Key to end users, this needs to exist as a middle man to hold and secure your Riot Api Key. (Currently only a dev key)
 
-## Inspiration
+## Why
 
-I recently began using [We will teach you League](https://weteachleague.com/)'s auto recording program, and have found a few ways in which I believe it could be inproved.
+I began using We Teach League's Auto recording software a couple months ago and thought it was really nice, but had some areas to improve. The main area being that when you go to the VOD library it is very difficult to find a specific game you're looking for. The VODS show an image of the game start, which is impossible to tell what champs are in the game as they haven't spawned in yet, and a title of PLayerChampion Versus EnemyLaneOpponent. I had a few issues with the text is, if I play one champ every game then it's hard to tell which game is which, especially if I play, say, three games against a Miss Fortune then three against Jinx, which one was my support trolling, and which one do I need to review for my own mistakes. So I decided to make something similar but with different icons to view the vod, and I thought something like op.gg/u.gg/mobalytics would work perfect for this.
 
-## Planned Features
-
-- [ ] Auto recording league of legends games
-- [ ] Easy way to look through VODs to find games
-- [ ] Note taking features
-- [ ] Mark which champions a given note is relavent for
-- [ ] Bring previously taken notes to the forefront when the relavent champions are in the current game
-
-### The plan
-
-Currently in WTL Auto Recorder in order to find a game you look througha list of icons which show
-
-- Champion played
-- Champion of your direct role opponent
-- Queue Type (Ranked, Custom, ect)
-- Thumbnail of the game
-
-When using the program I found this combination of information to be not the most optimal for finding a specific game, especially when I play 10+ games a day, and often play against the same champion.
-
-My plan is to implement a system more similar to u.gg, op.gg, or the league client where it shows
-
-- Icon of champion played
-- Items bought
-- Runes taken
-- Summoner Spells taken
-- Q type
-- Teammates Champion icons
-- Enemy Champion icons
-- KDA
-- CS and Vision scores
-- Game Duration
-- Time since game was played
-
-Where sites like op.gg and u.gg have a button to open a drop down menu showing more stats, I plan to have a vido player displaying the vod of the game.
-
-## Other notes
-
-### Champion Names vs Player Names
-
-Next to the icons of the champion, I have decided for the time being to display the champion name, rather than the player name. I don't believe knowing the player name is helpful to the player in a learning journey, but a champion name can be a good way to search through games using ctrl+f.
-
-### Users with multiple accounts
-
-One thing WTL does well that is not mentioned here is how it handles multiple accounts. Because the user is identified by their discord account, it can link multiple accounts to that discord account, just be detecting them on the computer when they are logged in allowing for no other action required by the user.
-
-# Work(s) in progress
-
-## VOD Recording
-
-The main part of this program is that it should automatically record games of league from the player's perspective. To do this we need to detect when a game has started, and begin a window capture of the game.
-
-### Subtasks
-
-- [x] ✅ Detect League Game window
-- [x] ✅ Connect to League Client and get current Summoner
-- [x] ✅ Get and display Match History
-- [x] ❌ Detect when game has been started
-- [ ] Save capture to a file
-- [ ] Get game ID for file name
-- [ ] Get timestamps for kills/deaths/assists
-
-### ❌ Blockers ❌
-
-Currently I can detect if a league game is "InProgress" This is the state of the game after champ select has concluded and includes load screen time. Ideally I'd like to detect when the game loads in.
-
-# References
+# Design References
 
 ## 1. WTL Auto Recorder
 
